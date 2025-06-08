@@ -1,3 +1,12 @@
+const res = await fetch('/api/chat', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-personality': JSON.stringify(profile?.personality || 'sweet')
+  },
+  body: JSON.stringify({ messages: newMessages, encrypted: false })
+});
+
 import { Configuration, OpenAIApi } from 'openai';
 
 const configuration = new Configuration({
