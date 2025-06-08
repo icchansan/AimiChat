@@ -31,7 +31,14 @@ export default function ChatPage() {
       });
       const data = await res.json();
       const updated = [...newMessages, { from: 'aimi', text: data.reply }];
-      setMessages(updated);
+      // Make Aimi speak
+if ('speechSynthesis' in window) {
+  const utterance = new SpeechSynthesisUtterance(data.reply);
+  utterance.voice = speechSynthesis.getVoices().find(v => v.name.includes('Female') || v.lang.includes('en'));
+  utterance.pitch = 1.2;
+  utterance.rate = 1;
+  speechSynthesis.speak(utterance);
+}
 
       const earnedXp = input.length > 20 ? 15 : 5;
       const totalXp = xp + earnedXp;
