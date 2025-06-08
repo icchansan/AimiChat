@@ -64,7 +64,17 @@ export default function ChatPage() {
           </div>
         ))}
       </div>
-      <input value={input} onChange={(e) => setInput(e.target.value)} style={{ width: '80%' }} />
+      <input
+  value={input}
+  onChange={(e) => setInput(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  }}
+  style={{ width: '80%' }}
+/>
       <button onClick={send}>Send</button>
     </div>
   );
