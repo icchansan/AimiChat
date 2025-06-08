@@ -1,11 +1,9 @@
 export default async function handler(req, res) {
-  const { Configuration, OpenAIApi } = require("openai");
+  const { default: OpenAI } = await import("openai");
 
-  const configuration = new Configuration({
+  const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
-
-  const openai = new OpenAIApi(configuration);
 
   const { messages } = req.body;
   const userMessage = messages?.slice(-1)[0]?.text || '';
@@ -21,17 +19,19 @@ export default async function handler(req, res) {
   const prompt = `${promptBase[personality] || promptBase.sweet}\nUser: ${userMessage}\nAimi:`;
 
   try {
-    const completion = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt,
-      max_tokens: 80,
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "system", content: promptBase[personality] },
+        { role: "user", content: userMessage },
+      ],
       temperature: 0.8,
     });
 
-    const reply = completion.data.choices[0].text.trim();
+    const reply = completion.choices[0].message.content.trim();
     res.status(200).json({ reply });
   } catch (err) {
-    console.error("🔴 OpenAI error:", err); // This will show in Vercel logs
+    console.error("🔴 OpenAI error:", err.message);
     res.status(500).json({ reply: "Oops! Aimi is a bit sleepy right now..." });
   }
 }
