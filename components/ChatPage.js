@@ -31,6 +31,7 @@ export default function ChatPage() {
       });
       const data = await res.json();
       const updated = [...newMessages, { from: 'aimi', text: data.reply }];
+      setMessages(updated);
       // Make Aimi speak
 if ('speechSynthesis' in window) {
   const utterance = new SpeechSynthesisUtterance(data.reply);
