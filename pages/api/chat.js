@@ -4,6 +4,7 @@ export default async function handler(req, res) {
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   });
+
   const openai = new OpenAIApi(configuration);
 
   const { messages } = req.body;
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
     const reply = completion.data.choices[0].text.trim();
     res.status(200).json({ reply });
   } catch (err) {
-    console.error("OpenAI error:", err.message);
+    console.error("🔴 OpenAI error:", err); // This will show in Vercel logs
     res.status(500).json({ reply: "Oops! Aimi is a bit sleepy right now..." });
   }
 }
