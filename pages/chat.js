@@ -1,22 +1,12 @@
-const res = await fetch('/api/chat', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'x-personality': JSON.stringify(profile?.personality || 'sweet')
-  },
-  body: JSON.stringify({ messages: newMessages, encrypted: false })
-});
-
-import { Configuration, OpenAIApi } from 'openai';
-
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
-
 export default async function handler(req, res) {
-  const { messages, encrypted } = req.body;
+  const { Configuration, OpenAIApi } = require("openai");
 
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+
+  const { messages } = req.body;
   const userMessage = messages?.slice(-1)[0]?.text || '';
   const personality = JSON.parse(req.headers['x-personality'] || '"sweet"');
 
@@ -27,7 +17,7 @@ export default async function handler(req, res) {
     shy: "You are Aimi, a soft-spoken and shy anime girl. You speak with lots of hesitations and kindness.",
   };
 
-  const prompt = `${promptBase[personality] || promptBase.sweet}\nUser: ${userMessage}\nAimi:`;
+  const prompt = `${promptBase[personality] || promptBase.sweet}\\nUser: ${userMessage}\\nAimi:`;
 
   try {
     const completion = await openai.createCompletion({
@@ -40,7 +30,7 @@ export default async function handler(req, res) {
     const reply = completion.data.choices[0].text.trim();
     res.status(200).json({ reply });
   } catch (err) {
-    console.error(err);
+    console.error("OpenAI error:", err.message);
     res.status(500).json({ reply: "Oops! Aimi is a bit sleepy right now..." });
   }
 }
