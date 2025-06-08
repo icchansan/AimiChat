@@ -1,5 +1,6 @@
-// Placeholder chat API
 export default function handler(req, res) {
-  const reply = { reply: req.body.encrypted ? req.body.messages.slice(-1)[0].text : "Hi!" };
+  const reply = {
+    reply: req.body.encrypted ? req.body.messages.slice(-1)[0].text : "Hi there! I'm Aimi!"
+  };
   res.status(200).json(reply);
 }

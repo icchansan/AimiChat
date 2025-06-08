@@ -1,4 +1,10 @@
-// Home page redirect placeholder
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
 export default function Home() {
-  return <div>Go to /setup or /chat</div>;
+  const router = useRouter();
+  useEffect(() => {
+    router.push('/setup');
+  }, []);
+  return <div>Redirecting to setup...</div>;
 }
